@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Montserrat } from 'next/font/google'
-import { Code, ImageIcon, LayoutDashboard, MessageSquare, Music, Settings, VideoIcon } from "lucide-react";
+import { Code, ImageIcon, LayoutDashboard, LinkIcon, MessageSquare, Music, Settings, VideoIcon, FileIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
@@ -19,35 +19,53 @@ const routes = [
     color: "text-sky-500"
   },
   {
-    label: 'Conversation',
-    icon: MessageSquare,
-    href: '/conversation',
+    label: 'Business Name Generator',
+    icon: FileIcon,
+    href: '/name-generator',
     color: "text-violet-500",
   },
   {
-    label: 'Image Generation',
+    label: 'Logo Generation',
     icon: ImageIcon,
     color: "text-pink-700",
     href: '/image',
   },
   {
-    label: 'Video Generation',
-    icon: VideoIcon,
-    color: "text-orange-700",
-    href: '/video',
-  },
-  {
-    label: 'Music Generation',
-    icon: Music,
+    label: 'Domain Generation',
+    icon: LinkIcon,
     color: "text-emerald-500",
-    href: '/music',
+    href: '/domain-generator',
   },
-  {
-    label: 'Code Generation',
-    icon: Code,
-    color: "text-green-700",
-    href: '/code',
-  },
+  // {
+  //   label: 'Conversation',
+  //   icon: MessageSquare,
+  //   href: '/conversation',
+  //   color: "text-violet-500",
+  // },
+  // {
+  //   label: 'Image Generation',
+  //   icon: ImageIcon,
+  //   color: "text-pink-700",
+  //   href: '/image',
+  // },
+  // {
+  //   label: 'Video Generation',
+  //   icon: VideoIcon,
+  //   color: "text-orange-700",
+  //   href: '/video',
+  // },
+  // {
+  //   label: 'Music Generation',
+  //   icon: Music,
+  //   color: "text-emerald-500",
+  //   href: '/music',
+  // },
+  // {
+  //   label: 'Code Generation',
+  //   icon: Code,
+  //   color: "text-green-700",
+  //   href: '/code',
+  // },
   {
     label: 'Settings',
     icon: Settings,

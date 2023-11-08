@@ -17,7 +17,7 @@ export async function POST(
   try {
     const { userId } = auth();
     const body = await req.json();
-    const { prompt, amount = 1, resolution = "512x512" } = body;
+    const { prompt, amount = 3, resolution = "512x512", businessName, businessType, slogan } = body;
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -39,6 +39,18 @@ export async function POST(
       return new NextResponse("Resolution is required", { status: 400 });
     }
 
+    if(!businessName) {
+      return new NextResponse("Business name is required", { status: 400 });
+    }
+
+    if(!businessType) {
+      return new NextResponse("Business type is required", { status: 400 });
+    }
+
+    if(!slogan) {
+      return new NextResponse("Slogan is required", { status: 400 });
+    }
+
     const freeTrial = await checkApiLimit();
     const isPro = await checkSubscription();
 
@@ -46,8 +58,10 @@ export async function POST(
       return new NextResponse("Free trial has expired. Please upgrade to pro.", { status: 403 });
     }
 
+    const logoPrompt = `Create a logo for businessName=${businessName}, slogan=${slogan} businessCategory=${businessType}, logo text =${businessName} using these details=${prompt}. only need logo images. `;
+
     const response = await openai.createImage({
-      prompt,
+      prompt: logoPrompt,
       n: parseInt(amount, 10),
       size: resolution,
     });
