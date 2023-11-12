@@ -3,7 +3,7 @@
 import * as z from "zod";
 import axios from "axios";
 import Image from "next/image";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Download, FolderEdit, ImageIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -12,13 +12,7 @@ import { useRouter } from "next/navigation";
 
 import { Heading } from "@/components/heading";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Loader } from "@/components/loader";
@@ -32,74 +26,35 @@ import {
 } from "@/components/ui/select";
 import { useProModal } from "@/hooks/use-pro-modal";
 
-import {
-  amountOptions,
-  formSchema,
-  nameStyleOptions,
-  resolutionOptions,
-} from "./constants";
+import { amountOptions, formSchema, resolutionOptions } from "./constants";
 import { StepHeading } from "@/components/step-heading";
 
-const NameGeneratorPage = () => {
+const NameAvailabilityPage = () => {
   const proModal = useProModal();
   const router = useRouter();
   const [photos, setPhotos] = useState<string[]>([]);
-  const [names, setNames] = useState<
-    {
-      name: string;
-      slogan: string;
-    }[]
-  >([]);
-  const [selectedName, setSelectedName] = useState<{
+  const [selectedBusinessDetails, setSelectedBusinessDetails] = useState<{
     name: string;
     slogan: string;
     businessType: string;
-  }>({ name: "", slogan: "" , businessType: ""});
-
-  const [businessType, setBusinessType] = useState<string>("");
+  }>({ name: "", slogan: "", businessType: "" });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      prompt: "",
-      type: "random",
-    },
   });
 
   const isLoading = form.formState.isSubmitting;
 
-  const handleNameSelect = (name: string, slogan: string) => {
-    setSelectedName({
-      name,
-      slogan,
-      businessType: businessType,
-    });
-    toast.success("Name selected.");
-    localStorage.setItem('selectedName', JSON.stringify({ name, slogan, businessType }));
-    router.push(`/name-availability`);
+  const handleNameAvailability = () => {
+    toast.success("Name is available.");
+    router.push(`/company-location`);
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      setPhotos([]);
-      setNames([]);
-      setBusinessType(values.prompt);
-
       const response = await axios.post("/api/name-generator", values);
       console.log(response.data.content);
-      const restData = response.data.content.split("\n").map((name: string) => {
-        const nameArr = name.split("-");
-        return {
-          name: nameArr[0],
-          slogan: nameArr[1],
-        };
-      });
-
-      setNames(restData);
-
-      //const urls = response.data.map((image: { url: string }) => image.url);
-
-      //setPhotos(urls);
+      
     } catch (error: any) {
       if (error?.response?.status === 403) {
         proModal.onOpen();
@@ -111,6 +66,31 @@ const NameGeneratorPage = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      // Assuming the local storage could have changed, we fetch it every time this effect runs
+      const data = localStorage.getItem("selectedName");
+      const selectedName = JSON.parse(
+        data || JSON.stringify({ name: "", slogan: "", businessType: "" })
+      );
+
+      // If there is no name, we don't want to do anything
+      if (!selectedName.name) return;
+
+      setSelectedBusinessDetails(selectedName);
+
+      // Now, we reset the form with the new default values
+      form.reset({
+        prompt: form.getValues("prompt"), // keeps the current 'prompt' value
+        businessName: selectedName.name,
+        businessType: selectedName.businessType,
+        slogan: selectedName.slogan,
+      });
+    };
+
+    fetchData();
+  }, [form]);
+
   return (
     <div>
       <Heading
@@ -121,8 +101,8 @@ const NameGeneratorPage = () => {
         bgColor="bg-violet-500/10"
       />
       <StepHeading
-        step="1"
-        title="Describe about your business"
+        step="2"
+        title="Check whether the generated name is available or not."
         icon={ArrowRight}
         iconColor="text-violet-500"
       />
@@ -144,14 +124,14 @@ const NameGeneratorPage = () => {
             "
           >
             <FormField
-              name="prompt"
+              name="businessName"
               render={({ field }) => (
-                <FormItem className="col-span-12 lg:col-span-7">
+                <FormItem className="col-span-12 lg:col-span-3">
                   <FormControl className="m-0 p-0">
                     <Input
-                      className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
+                      className="border border-gray-300 rounded-md shadow-sm px-3 py-2 w-full"
                       disabled={isLoading}
-                      placeholder="Describe your business type and business nature."
+                      placeholder="Company Name"
                       {...field}
                     />
                   </FormControl>
@@ -159,39 +139,42 @@ const NameGeneratorPage = () => {
               )}
             />
             <FormField
-              control={form.control}
-              name="type"
+              name="slogan"
+              render={({ field }) => (
+                <FormItem className="col-span-12 lg:col-span-4">
+                  <FormControl className="m-0 p-0">
+                    <Input
+                      className="border border-gray-300 rounded-md shadow-sm px-3 py-2 w-full"
+                      disabled={isLoading}
+                      placeholder="Company Slogan"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="businessType"
               render={({ field }) => (
                 <FormItem className="col-span-12 lg:col-span-3">
-                  <Select
-                    disabled={isLoading}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue defaultValue={field.value} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {nameStyleOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label + " - " + option.description}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl className="m-0 p-0">
+                    <Input
+                      className="border border-gray-300 rounded-md shadow-sm px-3 py-2 w-full"
+                      disabled={isLoading}
+                      placeholder="Business Type"
+                      {...field}
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />
             <Button
+              onClick={() => handleNameAvailability()}
               className="col-span-12 lg:col-span-2 w-full"
-              type="submit"
               disabled={isLoading}
               size="icon"
             >
-              Generate
+              Check Availability
             </Button>
           </form>
         </Form>
@@ -200,25 +183,23 @@ const NameGeneratorPage = () => {
             <Loader />
           </div>
         )}
-        {/* {names.length === 0 && !isLoading && (
+        {/* {photos.length === 0 && !isLoading && (
           <Empty label="No images generated." />
         )} */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8">
-          {names.map((name) => (
-            <Card key={name.name} className="rounded-lg overflow-hidden">
-              <CardHeader>
-                <CardTitle>{name.name}</CardTitle>
-                <CardDescription>{name.slogan}</CardDescription>
-              </CardHeader>
-
+          {photos.map((src) => (
+            <Card key={src} className="rounded-lg overflow-hidden">
+              <div className="relative aspect-square">
+                <Image fill alt="Generated" src={src} />
+              </div>
               <CardFooter className="p-2">
                 <Button
-                  onClick={() => handleNameSelect(name.name, name.slogan)}
-                  variant="default"
+                  onClick={() => window.open(src)}
+                  variant="secondary"
                   className="w-full"
                 >
-                  {/* <Download className="h-4 w-4 mr-2" /> */}
-                  Choose
+                  <Download className="h-4 w-4 mr-2" />
+                  Download
                 </Button>
               </CardFooter>
             </Card>
@@ -229,4 +210,4 @@ const NameGeneratorPage = () => {
   );
 };
 
-export default NameGeneratorPage;
+export default NameAvailabilityPage;
