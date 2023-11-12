@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 import { tools } from "@/constants";
 
-export default function HomePage() {
+export default function GoogleWorkspace() {
   const router = useRouter();
 
   return (
@@ -18,16 +18,16 @@ export default function HomePage() {
           Explore the power of AI Companies
         </h2>
         <p className="text-muted-foreground font-light text-sm md:text-lg text-center">
-          Register your company today and get your ABN in minutes.
+          Register your business today and get your ABN in minutes.
         </p>
       </div>
       <div className="mb-4 px-4 md:px-20 lg:px-32 space-y-4">
         <h2 className="text-xl md:text-2xl font-medium text-left">
-          Register your company
+          Google Workspace
         </h2>
       </div>
       <div className="px-4 md:px-20 lg:px-32 space-y-4">
-        {tools.map((tool) => (
+        {/* {tools.map((tool) => (
           <Card
             onClick={() => router.push(tool.href)}
             key={tool.href}
@@ -41,7 +41,7 @@ export default function HomePage() {
             </div>
             <ArrowRight className="w-5 h-5" />
           </Card>
-        ))}
+        ))} */}
       </div>
     </div>
   );

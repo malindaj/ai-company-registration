@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Montserrat } from 'next/font/google'
-import { Code, ImageIcon, LayoutDashboard, LinkIcon, MessageSquare, Music, Settings, VideoIcon, FileIcon } from "lucide-react";
+import { Code, ImageIcon, LayoutDashboard, LinkIcon, MessageSquare, Music, Settings, VideoIcon, FileIcon, LayoutPanelLeft, Building, Building2, AppWindow, Receipt, Globe } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
@@ -13,29 +13,59 @@ const poppins = Montserrat ({ weight: '600', subsets: ['latin'] });
 
 const routes = [
   {
-    label: 'Dashboard',
+    label: "Dashboard",
     icon: LayoutDashboard,
-    href: '/dashboard',
-    color: "text-sky-500"
+    href: "/dashboard",
+    color: "text-sky-500",
   },
   {
-    label: 'Business Name Generator',
-    icon: FileIcon,
-    href: '/name-generator',
+    label: "Businesses",
+    icon: Building2,
+    href: "/businesses",
+    color: "text-emerald-500",
+  },
+  {
+    label: "Applications",
+    icon: AppWindow,
+    href: "/applications",
+    color: "text-orange-600",
+  },
+  {
+    label: "Billing",
+    icon: Receipt,
+    href: "/billing",
     color: "text-violet-500",
   },
+  // {
+  //   label: "Business Name Generator",
+  //   icon: FileIcon,
+  //   href: "/name-generator",
+  //   color: "text-violet-500",
+  // },
   {
-    label: 'Logo Generation',
-    icon: ImageIcon,
-    color: "text-pink-700",
-    href: '/image',
+    label: "Google Workspace",
+    icon: Globe,
+    color: "text-yellow-400",
+    href: "/google-workspace",
   },
   {
-    label: 'Domain Generation',
-    icon: LinkIcon,
-    color: "text-emerald-500",
-    href: '/domain-generator',
+    label: "Partner Offers",
+    icon: Globe,
+    color: "text-teal-500",
+    href: "#",
   },
+  // {
+  //   label: "Logo Generation",
+  //   icon: ImageIcon,
+  //   color: "text-pink-700",
+  //   href: "/image",
+  // },
+  // {
+  //   label: "Domain Generation",
+  //   icon: LinkIcon,
+  //   color: "text-emerald-500",
+  //   href: "/domain-generator",
+  // },
   // {
   //   label: 'Conversation',
   //   icon: MessageSquare,
@@ -67,9 +97,10 @@ const routes = [
   //   href: '/code',
   // },
   {
-    label: 'Settings',
+    label: "Settings",
     icon: Settings,
-    href: '/settings',
+    color: "text-red-700",
+    href: "/settings",
   },
 ];
 
