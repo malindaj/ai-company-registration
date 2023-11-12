@@ -1,11 +1,11 @@
-import { Code, ImageIcon, MessageSquare, Music, VideoIcon, LinkIcon } from "lucide-react";
+import { Code, ImageIcon, MessageSquare, Music, VideoIcon, LinkIcon, FolderEdit } from "lucide-react";
 
 export const MAX_FREE_COUNTS = 50;
 
 export const tools = [
   {
-    label: 'Business Name Generator',
-    icon: MessageSquare,
+    label: 'Company Name Generator',
+    icon: FolderEdit,
     href: '/name-generator',
     color: "text-violet-500",
     bgColor: "bg-violet-500/10",
@@ -20,8 +20,8 @@ export const tools = [
   {
     label: 'Domain Generation',
     icon: LinkIcon,
-    color: "text-pink-700",
-    bgColor: "text-emerald-500",
+    color: "text-emerald-500",
+    bgColor: "bg-emerald-500/10",
     href: '/domain-generator',
   },
 ];
