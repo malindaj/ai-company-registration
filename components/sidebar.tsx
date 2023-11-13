@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Montserrat } from 'next/font/google'
-import { Code, ImageIcon, LayoutDashboard, LinkIcon, MessageSquare, Music, Settings, VideoIcon, FileIcon, LayoutPanelLeft, Building, Building2, AppWindow, Receipt, Globe } from "lucide-react";
+import { Code, ImageIcon, LayoutDashboard, LinkIcon, MessageSquare, Music, Settings, VideoIcon, FileIcon, LayoutPanelLeft, Building, Building2, AppWindow, Receipt, Globe, Percent } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
@@ -36,12 +36,6 @@ const routes = [
     href: "/billing",
     color: "text-violet-500",
   },
-  // {
-  //   label: "Business Name Generator",
-  //   icon: FileIcon,
-  //   href: "/name-generator",
-  //   color: "text-violet-500",
-  // },
   {
     label: "Google Workspace",
     icon: Globe,
@@ -50,52 +44,10 @@ const routes = [
   },
   {
     label: "Partner Offers",
-    icon: Globe,
+    icon: Percent,
     color: "text-teal-500",
     href: "#",
   },
-  // {
-  //   label: "Logo Generation",
-  //   icon: ImageIcon,
-  //   color: "text-pink-700",
-  //   href: "/image",
-  // },
-  // {
-  //   label: "Domain Generation",
-  //   icon: LinkIcon,
-  //   color: "text-emerald-500",
-  //   href: "/domain-generator",
-  // },
-  // {
-  //   label: 'Conversation',
-  //   icon: MessageSquare,
-  //   href: '/conversation',
-  //   color: "text-violet-500",
-  // },
-  // {
-  //   label: 'Image Generation',
-  //   icon: ImageIcon,
-  //   color: "text-pink-700",
-  //   href: '/image',
-  // },
-  // {
-  //   label: 'Video Generation',
-  //   icon: VideoIcon,
-  //   color: "text-orange-700",
-  //   href: '/video',
-  // },
-  // {
-  //   label: 'Music Generation',
-  //   icon: Music,
-  //   color: "text-emerald-500",
-  //   href: '/music',
-  // },
-  // {
-  //   label: 'Code Generation',
-  //   icon: Code,
-  //   color: "text-green-700",
-  //   href: '/code',
-  // },
   {
     label: "Settings",
     icon: Settings,
@@ -121,7 +73,7 @@ export const Sidebar = ({
             <Image fill alt="Logo" src="/logo.png" />
           </div>
           <h1 className={cn("text-2xl font-bold", poppins.className)}>
-            Genius
+            AI Companies
           </h1>
         </Link>
         <div className="space-y-1">
