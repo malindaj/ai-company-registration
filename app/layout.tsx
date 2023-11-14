@@ -11,9 +11,9 @@ import './globals.css'
 const font = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'AI Companies',
-  description: 'AI Platform',
-}
+  title: "IntelliBiz Pro",
+  description: "AI Business Registration Platform",
+};
 
 export default async function RootLayout({
   children,
