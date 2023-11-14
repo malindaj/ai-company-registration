@@ -5,7 +5,7 @@ import axios from "axios";
 import Image from "next/image";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Download, FolderEdit, ImageIcon } from "lucide-react";
+import { ArrowRight, Building2, Download, FolderEdit, ImageIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -24,38 +24,45 @@ import {
 import { StepHeading } from "@/components/step-heading";
 
 const CompanyLocation = () => {
+  
   const proModal = useProModal();
+  
   const router = useRouter();
-  const [businessType, setBusinessType] = useState<string>("");
 
+  const [selectedAddress, setSelectedAddress] = useState<{
+    address: string;
+  }>({ address: "" });
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      prompt: "",
-      type: "random",
-    },
+    // defaultValues: {
+    //   prompt: "",
+    //   type: "random",
+    // },
   });
 
   const isLoading = form.formState.isSubmitting;
 
-  const handleLocationSelect = () => {
-    toast.success("Location is available.");
-    router.push(`/image`);
+  const [loading, setLoading] = useState(false);
+
+  const handleLocation = async () => {
+    try {
+      setLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      toast.success("Location selected.");
+      router.push(`/company-structure`);
+    } catch (error) {
+      toast.error("Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      setBusinessType(values.prompt);
-
-      const response = await axios.post("/api/name-generator", values);
-      console.log(response.data.content);
-      const restData = response.data.content.split("\n").map((name: string) => {
-        const nameArr = name.split("-");
-        return {
-          name: nameArr[0],
-          slogan: nameArr[1],
-        };
-      });
+      // const response = await axios.post("/api/name-generator", values);
+      // console.log(response.data.content);
+      console.log("Function working!");
     } catch (error: any) {
       if (error?.response?.status === 403) {
         proModal.onOpen();
@@ -70,16 +77,15 @@ const CompanyLocation = () => {
   return (
     <div>
       <Heading
-        title="Company Name Generation"
-        description="Tell us your business type and business nature and we will generate a list of company names for you to choose from."
-        icon={FolderEdit}
+        title="Incorporate a Company"
+        description="Navigate the formalities of establishing your legal entity with ease."
+        icon={Building2}
         iconColor="text-violet-500"
         bgColor="bg-violet-500/10"
       />
       <StepHeading
         step="3"
-        title="Company Location Details"
-        icon={ArrowRight}
+        title="Specify Company Location"
         iconColor="text-violet-500"
       />
       <div className="px-4 lg:px-8">
@@ -115,16 +121,17 @@ const CompanyLocation = () => {
               )}
             />
             <Button
-              onClick={() => handleLocationSelect()}              
+              type="submit"
               className="col-span-12 lg:col-span-2 w-full"
-              disabled={isLoading}
+              disabled={loading || !form.watch("prompt")}
               size="icon"
+              onClick={() => handleLocation()}
             >
               Continue
             </Button>
           </form>
         </Form>
-        {isLoading && (
+        {loading && (
           <div className="p-20">
             <Loader />
           </div>
