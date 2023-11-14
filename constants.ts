@@ -1,6 +1,6 @@
 import { Code, ImageIcon, MessageSquare, Music, VideoIcon, LinkIcon, FolderEdit, Building2, BookOpenCheck, Hash } from "lucide-react";
 
-export const MAX_FREE_COUNTS = 50;
+export const MAX_FREE_COUNTS = 500;
 
 export const tools = [
   {
@@ -34,8 +34,8 @@ export const tools = [
   {
     label: 'Secure a Domain',
     icon: LinkIcon,
-    color: "text-blue-500",
-    bgColor: "bg-blue-500/10",
+    color: "text-sky-500",
+    bgColor: "bg-green-700/10",
     href: '/domain-generator',
   },
 ];

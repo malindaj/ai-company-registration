@@ -5,7 +5,13 @@ import axios from "axios";
 import Image from "next/image";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Download, FolderEdit, ImageIcon } from "lucide-react";
+import {
+  ArrowRight,
+  Building2,
+  Download,
+  FolderEdit,
+  ImageIcon,
+} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -43,7 +49,6 @@ import { StepHeading } from "@/components/step-heading";
 const NameGeneratorPage = () => {
   const proModal = useProModal();
   const router = useRouter();
-  const [photos, setPhotos] = useState<string[]>([]);
   const [names, setNames] = useState<
     {
       name: string;
@@ -54,7 +59,7 @@ const NameGeneratorPage = () => {
     name: string;
     slogan: string;
     businessType: string;
-  }>({ name: "", slogan: "" , businessType: ""});
+  }>({ name: "", slogan: "", businessType: "" });
 
   const [businessType, setBusinessType] = useState<string>("");
 
@@ -67,21 +72,34 @@ const NameGeneratorPage = () => {
   });
 
   const isLoading = form.formState.isSubmitting;
+  const [isLoading2, setIsLoading2] = useState(false);
+  const [loadingButtons, setLoadingButtons] = useState<string[]>([]);
 
-  const handleNameSelect = (name: string, slogan: string) => {
+  const handleNameSelect = async (
+    name: string,
+    slogan: string
+  ): Promise<void> => {
     setSelectedName({
       name,
       slogan,
       businessType: businessType,
     });
-    toast.success("Name selected.");
-    localStorage.setItem('selectedName', JSON.stringify({ name, slogan, businessType }));
-    router.push(`/name-availability`);
+    localStorage.setItem(
+      "selectedName",
+      JSON.stringify({ name, slogan, businessType })
+    );
+
+    setLoadingButtons((prev) => [...prev, name]);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      router.push(`/name-availability`);
+    } finally {
+      setLoadingButtons((prev) => prev.filter((btnId) => btnId !== name));
+    }
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      setPhotos([]);
       setNames([]);
       setBusinessType(values.prompt);
 
@@ -96,10 +114,6 @@ const NameGeneratorPage = () => {
       });
 
       setNames(restData);
-
-      //const urls = response.data.map((image: { url: string }) => image.url);
-
-      //setPhotos(urls);
     } catch (error: any) {
       if (error?.response?.status === 403) {
         proModal.onOpen();
@@ -114,16 +128,15 @@ const NameGeneratorPage = () => {
   return (
     <div>
       <Heading
-        title="Company Name Generation"
-        description="Tell us your business type and business nature and we will generate a list of company names for you to choose from."
-        icon={FolderEdit}
+        title="Incorporate a Company"
+        description="Navigate the formalities of establishing your legal entity with ease."
+        icon={Building2}
         iconColor="text-violet-500"
         bgColor="bg-violet-500/10"
       />
       <StepHeading
         step="1"
-        title="Describe about your business"
-        icon={ArrowRight}
+        title="Define your business identity."
         iconColor="text-violet-500"
       />
       <div className="px-4 lg:px-8">
@@ -200,30 +213,46 @@ const NameGeneratorPage = () => {
             <Loader />
           </div>
         )}
-        {/* {names.length === 0 && !isLoading && (
-          <Empty label="No images generated." />
-        )} */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 mt-8">
           {names.map((name) => (
             <Card key={name.name} className="rounded-lg overflow-hidden">
               <CardHeader>
                 <CardTitle>{name.name}</CardTitle>
                 <CardDescription>{name.slogan}</CardDescription>
               </CardHeader>
-
-              <CardFooter className="p-2">
+              <CardFooter className="p-2 relative">
                 <Button
-                  onClick={() => handleNameSelect(name.name, name.slogan)}
+                  onClick={async () => {
+                    try {
+                      setLoadingButtons((prev) => [...prev, name.name]);
+                      await handleNameSelect(name.name, name.slogan);
+                    } finally {
+                      setLoadingButtons((prev) =>
+                        prev.filter((btnId) => btnId !== name.name)
+                      );
+                    }
+                  }}
+                  disabled={
+                    isLoading ||
+                    isLoading2 ||
+                    loadingButtons.includes(name.name)
+                  }
                   variant="default"
                   className="w-full"
                 >
-                  {/* <Download className="h-4 w-4 mr-2" /> */}
-                  Choose
+                  {loadingButtons.includes(name.name)
+                    ? "Choosing..."
+                    : "Choose"}
                 </Button>
               </CardFooter>
             </Card>
           ))}
         </div>
+        {isLoading2 && (
+          <div className="p-20">
+            <Loader />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import axios from "axios";
 import Image from "next/image";
 import { use, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Download, FolderEdit, ImageIcon } from "lucide-react";
+import { ArrowRight, Building2, Download, FolderEdit, ImageIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -94,16 +94,15 @@ const NameAvailabilityPage = () => {
   return (
     <div>
       <Heading
-        title="Company Name Generation"
-        description="Tell us your business type and business nature and we will generate a list of company names for you to choose from."
-        icon={FolderEdit}
+        title="Incorporate a Company"
+        description="Navigate the formalities of establishing your legal entity with ease."
+        icon={Building2}
         iconColor="text-violet-500"
         bgColor="bg-violet-500/10"
       />
       <StepHeading
         step="2"
-        title="Check whether the generated name is available or not."
-        icon={ArrowRight}
+        title="Check whether company name is available."
         iconColor="text-violet-500"
       />
       <div className="px-4 lg:px-8">
@@ -126,42 +125,12 @@ const NameAvailabilityPage = () => {
             <FormField
               name="businessName"
               render={({ field }) => (
-                <FormItem className="col-span-12 lg:col-span-3">
+                <FormItem className="col-span-12 lg:col-span-10">
                   <FormControl className="m-0 p-0">
                     <Input
                       className="border border-gray-300 rounded-md shadow-sm px-3 py-2 w-full"
                       disabled={isLoading}
                       placeholder="Company Name"
-                      {...field}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              name="slogan"
-              render={({ field }) => (
-                <FormItem className="col-span-12 lg:col-span-4">
-                  <FormControl className="m-0 p-0">
-                    <Input
-                      className="border border-gray-300 rounded-md shadow-sm px-3 py-2 w-full"
-                      disabled={isLoading}
-                      placeholder="Company Slogan"
-                      {...field}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              name="businessType"
-              render={({ field }) => (
-                <FormItem className="col-span-12 lg:col-span-3">
-                  <FormControl className="m-0 p-0">
-                    <Input
-                      className="border border-gray-300 rounded-md shadow-sm px-3 py-2 w-full"
-                      disabled={isLoading}
-                      placeholder="Business Type"
                       {...field}
                     />
                   </FormControl>
