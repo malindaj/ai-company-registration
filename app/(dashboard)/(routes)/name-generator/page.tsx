@@ -92,6 +92,7 @@ const NameGeneratorPage = () => {
     setLoadingButtons((prev) => [...prev, name]);
     try {
       await new Promise((resolve) => setTimeout(resolve, 5000));
+      toast.success("Name selected.");
       router.push(`/name-availability`);
     } finally {
       setLoadingButtons((prev) => prev.filter((btnId) => btnId !== name));

@@ -17,27 +17,17 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Loader } from "@/components/loader";
 import { Empty } from "@/components/ui/empty";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useProModal } from "@/hooks/use-pro-modal";
-
 import { amountOptions, formSchema, resolutionOptions } from "./constants";
 import { StepHeading } from "@/components/step-heading";
 
 const NameAvailabilityPage = () => {
   const proModal = useProModal();
   const router = useRouter();
-  const [photos, setPhotos] = useState<string[]>([]);
-  const [selectedBusinessDetails, setSelectedBusinessDetails] = useState<{
+
+  const [selectedCompanyName, setSelectedCompanyName] = useState<{
     name: string;
-    slogan: string;
-    businessType: string;
-  }>({ name: "", slogan: "", businessType: "" });
+  }>({ name: "" });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,15 +35,26 @@ const NameAvailabilityPage = () => {
 
   const isLoading = form.formState.isSubmitting;
 
-  const handleNameAvailability = () => {
-    toast.success("Name is available.");
-    router.push(`/company-location`);
+  const [loading, setLoading] = useState(false);
+
+  const handleNameAvailability = async () => {
+    try {
+      setLoading(true); // Set loading state to true
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      toast.success("Name is available.");
+      router.push(`/company-location`);
+    } catch (error) {
+      toast.error("Something went wrong.");
+    } finally {
+      setLoading(false); // Reset loading state
+    }
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await axios.post("/api/name-generator", values);
-      console.log(response.data.content);
+      // const response = await axios.post("/api/name-generator", values);
+      // console.log(response.data.content);
+      console.log("Function working!");
       
     } catch (error: any) {
       if (error?.response?.status === 403) {
@@ -68,23 +69,18 @@ const NameAvailabilityPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // Assuming the local storage could have changed, we fetch it every time this effect runs
       const data = localStorage.getItem("selectedName");
-      const selectedName = JSON.parse(
-        data || JSON.stringify({ name: "", slogan: "", businessType: "" })
+      const selectedCompanyName = JSON.parse(
+        data || JSON.stringify({ name: "" })
       );
 
-      // If there is no name, we don't want to do anything
-      if (!selectedName.name) return;
+      if (!selectedCompanyName.name) return;
 
-      setSelectedBusinessDetails(selectedName);
+      setSelectedCompanyName(selectedCompanyName);
 
-      // Now, we reset the form with the new default values
       form.reset({
-        prompt: form.getValues("prompt"), // keeps the current 'prompt' value
-        businessName: selectedName.name,
-        businessType: selectedName.businessType,
-        slogan: selectedName.slogan,
+        prompt: form.getValues("prompt"),
+        businessName: selectedCompanyName.name,
       });
     };
 
@@ -138,42 +134,21 @@ const NameAvailabilityPage = () => {
               )}
             />
             <Button
-              onClick={() => handleNameAvailability()}
+              type="submit"
               className="col-span-12 lg:col-span-2 w-full"
-              disabled={isLoading}
+              disabled={loading}
               size="icon"
+              onClick={() => handleNameAvailability()}
             >
               Check Availability
             </Button>
           </form>
         </Form>
-        {isLoading && (
+        {loading && (
           <div className="p-20">
             <Loader />
           </div>
         )}
-        {/* {photos.length === 0 && !isLoading && (
-          <Empty label="No images generated." />
-        )} */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8">
-          {photos.map((src) => (
-            <Card key={src} className="rounded-lg overflow-hidden">
-              <div className="relative aspect-square">
-                <Image fill alt="Generated" src={src} />
-              </div>
-              <CardFooter className="p-2">
-                <Button
-                  onClick={() => window.open(src)}
-                  variant="secondary"
-                  className="w-full"
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Download
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
       </div>
     </div>
   );
