@@ -1,47 +1,22 @@
-import { cn } from "@/lib/utils";
-import { CheckSquare, XSquare } from "lucide-react";
+import React from "react";
+import { CheckSquare, Icon, XSquare } from "lucide-react";
+import FeatureListItem from "./feature-list-item";
 
-const features = [
-  {
-    text: "You'll be the sole director and shareholder, and are located in Australia.",
-    icon: CheckSquare,
-    iconColor: "text-emerald-500",
-  },
-  {
-    text: "Standard share setup: 100 ORD shares at $0.01 each.",
-    icon: CheckSquare,
-    iconColor: "text-emerald-500",
-  },
-  {
-    text: "No trusts holding shares.",
-    icon: XSquare,
-    iconColor: "text-red-700",
-  },
-  {
-    text: "No companies holding shares.",
-    icon: XSquare,
-    iconColor: "text-red-700",
-  },
-  {
-    text: "No other directors, secretaries or shareholders involved.",
-    icon: XSquare,
-    iconColor: "text-red-700",
-  },
-];
+interface Feature {
+  text: string;
+  icon: Icon;
+  iconColor: string;
+}
 
-const FeatureList = () => {
+interface FeatureListProps {
+  items: Feature[];
+}
 
+const FeatureList = ({ items }:FeatureListProps) => {
   return (
-    <div>
-      {features.map((feature) => (
-        <ul key={feature.text} className="px-6 text-sm text-muted-foreground">
-          <li className="flex items-center space-x-2 py-1">
-            <feature.icon className={cn("h-5 w-5 mr-3", feature.iconColor)} />
-            <span className="text-sm text-muted-foreground">
-              {feature.text}
-            </span>
-          </li>
-        </ul>
+    <div className="pb-4">
+      {items.map((item, index) => (
+        <FeatureListItem key={index} {...item} />
       ))}
     </div>
   );
