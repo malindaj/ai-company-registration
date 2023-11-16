@@ -2,28 +2,97 @@
 
 import FeatureList from "@/components/feature-list";
 import { Heading } from "@/components/heading";
-import { Loader } from "@/components/loader";
 import Paragraph from "@/components/paragraph";
 import { StepHeading } from "@/components/step-heading";
 import SubHeading from "@/components/sub-heading";
-import { Button } from "@/components/ui/button";
-import { FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Building2, CheckSquare, XSquare } from "lucide-react";
-import { Form, useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
-import * as z from "zod";
-import axios from "axios";
-import { formSchema, nameStyleOptions } from "./constants";
-import { useState } from "react";
-import { useRouter } from "next/router";
-
+import { Building2, CheckSquare, XSquare } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { formSchema } from "./constants";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { Loader } from "@/components/loader";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 const CompanyStructure = () => {
+
+  const router = useRouter();
+
+  const [selectedCompanyStructure, setSelectedCompanyStructure] = useState<{
+    name: string;
+  }>({ name: "" });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+  });
+
+  const isLoading = form.formState.isSubmitting;
+
+  const [loading, setLoading] = useState(false);
+
+  const handleSimpleCompanyStructure = async () => {
+    try {
+      setLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      toast.success("Company structure selected.");
+      router.push(`/review-confirmation`);
+    } catch (error) {
+      toast.error("Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAdvancedCompanyStructure = async () => {
+    try {
+      setLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      toast.success("Company structure selected.");
+      router.push(`/review-confirmation`);
+    } catch (error) {
+      toast.error("Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      console.log("Function working!");
+    } catch (error: any) {
+      if (error?.response?.status === 403) {
+        console.log("Function working!");
+      } else {
+        toast.error("Something went wrong.");
+      }
+    } finally {
+      router.refresh();
+    }
+  };
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const data = localStorage.getItem("selectedCompanyStructure");
+  //     const selectedCompanyStructure = JSON.parse(
+  //       data || JSON.stringify({ name: "" })
+  //     );
+
+  //     if (!selectedCompanyStructure.name) return;
+
+  //     selectedCompanyStructure(selectedCompanyStructure);
+
+  //     form.reset({
+  //       // prompt: form.getValues("prompt"),
+  //       // businessName: selectedCompanyStructure.name,
+  //     });
+  //   };
+
+  //   fetchData();
+  // }, [form]);
 
 const simpleItems = [
     {
@@ -107,7 +176,61 @@ const simpleItems = [
           </div>
         </div>
       </div>
-      
+      <div className="px-4 lg:px-8">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="
+              rounded-lg 
+              border 
+              w-full 
+              p-4 
+              px-3 
+              md:px-6 
+              focus-within:shadow-sm
+              grid
+              grid-cols-12
+              gap-2
+            "
+          >
+            <FormField
+              name="businessName"
+              render={({ field }) => (
+                <FormItem className="col-span-12 lg:col-span-8">
+                  <FormControl className="m-0 p-0">
+                    <div className="border border-gray-300 rounded-md shadow-sm px-3 py-2 w-full text-sm text-mute">
+                      Which company structure option best suits your needs?
+                    </div>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <Button
+              type="submit"
+              className="col-span-12 lg:col-span-2 w-full"
+              disabled={loading}
+              size="icon"
+              onClick={() => handleSimpleCompanyStructure()}
+            >
+              Simple
+            </Button>
+            <Button
+              type="submit"
+              className="col-span-12 lg:col-span-2 w-full"
+              disabled={loading}
+              size="icon"
+              onClick={() => handleAdvancedCompanyStructure()}
+            >
+              Advanced
+            </Button>
+          </form>
+        </Form>
+        {loading && (
+          <div className="p-20">
+            <Loader />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
