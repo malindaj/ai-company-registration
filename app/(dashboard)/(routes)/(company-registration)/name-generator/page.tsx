@@ -29,11 +29,9 @@ import {
 } from "@/components/ui/select";
 import { useProModal } from "@/hooks/use-pro-modal";
 
-import {
-  formSchema,
-  nameStyleOptions,
-} from "./constants";
+import { formSchema, nameStyleOptions } from "./constants";
 import { StepHeading } from "@/components/step-heading";
+import { StepFooter } from "@/components/step-footer";
 
 const NameGeneratorPage = () => {
   const proModal = useProModal();
@@ -61,7 +59,6 @@ const NameGeneratorPage = () => {
   });
 
   const isLoading = form.formState.isSubmitting;
-  const [isLoading2, setIsLoading2] = useState(false);
   const [loadingButtons, setLoadingButtons] = useState<string[]>([]);
 
   const handleNameSelect = async (
@@ -82,7 +79,7 @@ const NameGeneratorPage = () => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 5000));
       toast.success("Name selected.");
-      router.push(`/name-availability`);
+      // router.push(`/name-availability`);
     } finally {
       setLoadingButtons((prev) => prev.filter((btnId) => btnId !== name));
     }
@@ -115,6 +112,9 @@ const NameGeneratorPage = () => {
     }
   };
 
+  const [selectedStatus, setSelectedStatus] = useState<string>("Choose");
+
+
   return (
     <div>
       <Heading
@@ -124,10 +124,7 @@ const NameGeneratorPage = () => {
         iconColor="text-violet-500"
         bgColor="bg-violet-500/10"
       />
-      <StepHeading
-        step="1"
-        title="Define your business identity."
-      />
+      <StepHeading step="1" title="Define your business identity." />
       <div className="px-4 lg:px-8">
         <Form {...form}>
           <form
@@ -161,8 +158,8 @@ const NameGeneratorPage = () => {
               )}
             />
             <FormField
-              control={form.control}
               name="type"
+              control={form.control}
               render={({ field }) => (
                 <FormItem className="col-span-12 lg:col-span-4">
                   <Select
@@ -202,7 +199,7 @@ const NameGeneratorPage = () => {
             <Loader />
           </div>
         )}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 my-8">
           {names.map((name) => (
             <Card key={name.name} className="rounded-lg overflow-hidden">
               <CardHeader>
@@ -215,33 +212,28 @@ const NameGeneratorPage = () => {
                     try {
                       setLoadingButtons((prev) => [...prev, name.name]);
                       await handleNameSelect(name.name, name.slogan);
+                      setSelectedStatus("Choosed");
                     } finally {
                       setLoadingButtons((prev) =>
                         prev.filter((btnId) => btnId !== name.name)
                       );
                     }
                   }}
-                  disabled={
-                    isLoading ||
-                    isLoading2 ||
-                    loadingButtons.includes(name.name)
-                  }
+                  disabled={isLoading || loadingButtons.includes(name.name)}
                   variant="default"
                   className="w-full"
                 >
                   {loadingButtons.includes(name.name)
                     ? "Choosing..."
-                    : "Choose"}
+                    : selectedStatus}
                 </Button>
               </CardFooter>
             </Card>
           ))}
         </div>
-        {isLoading2 && (
-          <div className="p-20">
-            <Loader />
-          </div>
-        )}
+      </div>
+      <div className="px-8">
+        <StepFooter nextUrl={"/name-availability"} previousUrl={"/dashboard"} />
       </div>
     </div>
   );
