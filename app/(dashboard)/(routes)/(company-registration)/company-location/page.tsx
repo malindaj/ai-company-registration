@@ -22,6 +22,7 @@ import {
   resolutionOptions,
 } from "./constants";
 import { StepHeading } from "@/components/step-heading";
+import { StepFooter } from "@/components/step-footer";
 
 const CompanyLocation = () => {
   
@@ -83,11 +84,7 @@ const CompanyLocation = () => {
         iconColor="text-violet-500"
         bgColor="bg-violet-500/10"
       />
-      <StepHeading
-        step="3"
-        title="Specify Company Location"
-        iconColor="text-violet-500"
-      />
+      <StepHeading step="3" title="Specify Company Location" />
       <div className="px-4 lg:px-8">
         <Form {...form}>
           <form
@@ -136,6 +133,12 @@ const CompanyLocation = () => {
             <Loader />
           </div>
         )}
+      </div>
+      <div className="px-8 my-8">
+        <StepFooter
+          nextUrl={"/company-structure"}
+          previousUrl={"/name-availability"}
+        />
       </div>
     </div>
   );
