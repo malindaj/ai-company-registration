@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader } from "@/components/loader";
+import { StepFooter } from "@/components/step-footer";
 
 const ReviewConfirmation = () => {
 
@@ -28,6 +29,10 @@ const ReviewConfirmation = () => {
         }
     };
 
+    const handleBack = async () => {
+        console.log("Function is working!")
+    }
+
     return (
       <div>
         <Heading
@@ -37,11 +42,7 @@ const ReviewConfirmation = () => {
           iconColor="text-violet-500"
           bgColor="bg-violet-500/10"
         />
-        <StepHeading
-          step="5"
-          title="Review & confirm your provided details."
-          iconColor="text-violet-500"
-        />
+        <StepHeading step="5" title="Review & confirm your provided details." />
         <div className="px-8">
           <div
             className="
@@ -133,46 +134,7 @@ const ReviewConfirmation = () => {
               </div>
             </div>
           </div>
-          <div
-            className="
-              rounded-lg 
-              border 
-              w-full 
-              p-4 
-              mb-4
-              md:px-6 
-              md:mb-4
-              focus-within:shadow-sm
-              grid
-              grid-cols-12
-              gap-4
-            "
-          >
-            <Button
-              type="submit"
-              className="col-span-12 lg:col-span-3 w-full"
-              // disabled={loading || !form.watch("prompt")}
-              size="icon"
-              // onClick={() => handleLocation()}
-            >
-              Back
-            </Button>
-            <div className="col-span-12 lg:col-span-6"></div>
-            <Button
-              type="submit"
-              className="col-span-12 lg:col-span-3 w-full"
-              // disabled={loading || !form.watch("prompt")}
-              size="icon"
-              onClick={() => handleNext()}
-            >
-              Next
-            </Button>
-          </div>
-          {loading && (
-            <div className="p-20">
-              <Loader />
-            </div>
-          )}
+          <StepFooter nextUrl={"/payment"} previousUrl={"/company-structure"} />
         </div>
       </div>
     );

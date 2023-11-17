@@ -2,20 +2,12 @@
 
 import * as z from "zod";
 import axios from "axios";
-import Image from "next/image";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  ArrowRight,
-  Building2,
-  Download,
-  FolderEdit,
-  ImageIcon,
-} from "lucide-react";
+import { Building2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-
 import { Heading } from "@/components/heading";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,7 +20,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Loader } from "@/components/loader";
-import { Empty } from "@/components/ui/empty";
 import {
   Select,
   SelectContent,
@@ -39,10 +30,8 @@ import {
 import { useProModal } from "@/hooks/use-pro-modal";
 
 import {
-  amountOptions,
   formSchema,
   nameStyleOptions,
-  resolutionOptions,
 } from "./constants";
 import { StepHeading } from "@/components/step-heading";
 
@@ -138,7 +127,6 @@ const NameGeneratorPage = () => {
       <StepHeading
         step="1"
         title="Define your business identity."
-        iconColor="text-violet-500"
       />
       <div className="px-4 lg:px-8">
         <Form {...form}>
@@ -160,7 +148,7 @@ const NameGeneratorPage = () => {
             <FormField
               name="prompt"
               render={({ field }) => (
-                <FormItem className="col-span-12 lg:col-span-7">
+                <FormItem className="col-span-12 lg:col-span-6">
                   <FormControl className="m-0 p-0">
                     <Input
                       className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
@@ -176,7 +164,7 @@ const NameGeneratorPage = () => {
               control={form.control}
               name="type"
               render={({ field }) => (
-                <FormItem className="col-span-12 lg:col-span-3">
+                <FormItem className="col-span-12 lg:col-span-4">
                   <Select
                     disabled={isLoading}
                     onValueChange={field.onChange}
