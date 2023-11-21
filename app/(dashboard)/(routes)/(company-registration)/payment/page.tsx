@@ -15,7 +15,6 @@ const Payment = () => {
         <StepHeading
           step="6"
           title="Make your payment."
-          iconColor="text-violet-500"
         />
       </div>
     );
