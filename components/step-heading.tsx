@@ -1,18 +1,9 @@
-import { Icon } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-
 interface StepHeadingProps {
   step: string;
   title: string;
-  iconColor?: string;
 }
 
-export const StepHeading = ({
-  step,
-  title,
-  iconColor,
-}: StepHeadingProps) => {
+export const StepHeading = ({ step, title }: StepHeadingProps) => {
   return (
     <>
       <div className="px-4 lg:px-8 pt-4 flex items-center gap-x-3 mb-8">

@@ -20,6 +20,7 @@ import { Empty } from "@/components/ui/empty";
 import { useProModal } from "@/hooks/use-pro-modal";
 import { amountOptions, formSchema, resolutionOptions } from "./constants";
 import { StepHeading } from "@/components/step-heading";
+import { StepFooter } from "@/components/step-footer";
 
 const NameAvailabilityPage = () => {
   const proModal = useProModal();
@@ -96,11 +97,7 @@ const NameAvailabilityPage = () => {
         iconColor="text-violet-500"
         bgColor="bg-violet-500/10"
       />
-      <StepHeading
-        step="2"
-        title="Check whether company name is available."
-        iconColor="text-violet-500"
-      />
+      <StepHeading step="2" title="Check whether company name is available." />
       <div className="px-4 lg:px-8">
         <Form {...form}>
           <form
@@ -149,6 +146,9 @@ const NameAvailabilityPage = () => {
             <Loader />
           </div>
         )}
+      </div>
+      <div className="px-8 my-8">
+        <StepFooter nextUrl={"/company-location"} previousUrl={"/name-generator"} />
       </div>
     </div>
   );

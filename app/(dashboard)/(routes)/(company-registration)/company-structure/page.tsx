@@ -17,6 +17,7 @@ import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Loader } from "@/components/loader";
 import { useProModal } from "@/hooks/use-pro-modal";
+import { StepFooter } from "@/components/step-footer";
 
 const CompanyStructure = () => {
 
@@ -154,11 +155,7 @@ const simpleItems = [
         iconColor="text-violet-500"
         bgColor="bg-violet-500/10"
       />
-      <StepHeading
-        step="4"
-        title="Choose Your Company Structure."
-        iconColor="text-violet-500"
-      />
+      <StepHeading step="4" title="Choose Your Company Structure." />
       <div className="px-4 lg:px-8">
         <div className="flex items-center gap-x-3 mb-8">
           <div>
@@ -230,6 +227,12 @@ const simpleItems = [
             <Loader />
           </div>
         )}
+      </div>
+      <div className="px-8 my-8">
+        <StepFooter
+          nextUrl={"/review-confirmation"}
+          previousUrl={"/company-location"}
+        />
       </div>
     </div>
   );
