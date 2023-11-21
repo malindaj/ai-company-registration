@@ -5,7 +5,7 @@ import axios from "axios";
 import Image from "next/image";
 import { use, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, Download, FolderEdit, ImageIcon } from "lucide-react";
+import { ArrowRight, Building2, Download, FolderEdit, ImageIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -17,27 +17,17 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Loader } from "@/components/loader";
 import { Empty } from "@/components/ui/empty";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useProModal } from "@/hooks/use-pro-modal";
-
 import { amountOptions, formSchema, resolutionOptions } from "./constants";
 import { StepHeading } from "@/components/step-heading";
 
 const NameAvailabilityPage = () => {
   const proModal = useProModal();
   const router = useRouter();
-  const [photos, setPhotos] = useState<string[]>([]);
-  const [selectedBusinessDetails, setSelectedBusinessDetails] = useState<{
+
+  const [selectedCompanyName, setSelectedCompanyName] = useState<{
     name: string;
-    slogan: string;
-    businessType: string;
-  }>({ name: "", slogan: "", businessType: "" });
+  }>({ name: "" });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,15 +35,26 @@ const NameAvailabilityPage = () => {
 
   const isLoading = form.formState.isSubmitting;
 
-  const handleNameAvailability = () => {
-    toast.success("Name is available.");
-    router.push(`/company-location`);
+  const [loading, setLoading] = useState(false);
+
+  const handleNameAvailability = async () => {
+    try {
+      setLoading(true); // Set loading state to true
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      toast.success("Name is available.");
+      router.push(`/company-location`);
+    } catch (error) {
+      toast.error("Something went wrong.");
+    } finally {
+      setLoading(false); // Reset loading state
+    }
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await axios.post("/api/name-generator", values);
-      console.log(response.data.content);
+      // const response = await axios.post("/api/name-generator", values);
+      // console.log(response.data.content);
+      console.log("Function working!");
       
     } catch (error: any) {
       if (error?.response?.status === 403) {
@@ -68,23 +69,18 @@ const NameAvailabilityPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // Assuming the local storage could have changed, we fetch it every time this effect runs
       const data = localStorage.getItem("selectedName");
-      const selectedName = JSON.parse(
-        data || JSON.stringify({ name: "", slogan: "", businessType: "" })
+      const selectedCompanyName = JSON.parse(
+        data || JSON.stringify({ name: "" })
       );
 
-      // If there is no name, we don't want to do anything
-      if (!selectedName.name) return;
+      if (!selectedCompanyName.name) return;
 
-      setSelectedBusinessDetails(selectedName);
+      setSelectedCompanyName(selectedCompanyName);
 
-      // Now, we reset the form with the new default values
       form.reset({
-        prompt: form.getValues("prompt"), // keeps the current 'prompt' value
-        businessName: selectedName.name,
-        businessType: selectedName.businessType,
-        slogan: selectedName.slogan,
+        prompt: form.getValues("prompt"),
+        businessName: selectedCompanyName.name,
       });
     };
 
@@ -94,16 +90,15 @@ const NameAvailabilityPage = () => {
   return (
     <div>
       <Heading
-        title="Company Name Generation"
-        description="Tell us your business type and business nature and we will generate a list of company names for you to choose from."
-        icon={FolderEdit}
+        title="Incorporate a Company"
+        description="Navigate the formalities of establishing your legal entity with ease."
+        icon={Building2}
         iconColor="text-violet-500"
         bgColor="bg-violet-500/10"
       />
       <StepHeading
         step="2"
-        title="Check whether the generated name is available or not."
-        icon={ArrowRight}
+        title="Check whether company name is available."
         iconColor="text-violet-500"
       />
       <div className="px-4 lg:px-8">
@@ -126,7 +121,7 @@ const NameAvailabilityPage = () => {
             <FormField
               name="businessName"
               render={({ field }) => (
-                <FormItem className="col-span-12 lg:col-span-3">
+                <FormItem className="col-span-12 lg:col-span-10">
                   <FormControl className="m-0 p-0">
                     <Input
                       className="border border-gray-300 rounded-md shadow-sm px-3 py-2 w-full"
@@ -138,73 +133,22 @@ const NameAvailabilityPage = () => {
                 </FormItem>
               )}
             />
-            <FormField
-              name="slogan"
-              render={({ field }) => (
-                <FormItem className="col-span-12 lg:col-span-4">
-                  <FormControl className="m-0 p-0">
-                    <Input
-                      className="border border-gray-300 rounded-md shadow-sm px-3 py-2 w-full"
-                      disabled={isLoading}
-                      placeholder="Company Slogan"
-                      {...field}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              name="businessType"
-              render={({ field }) => (
-                <FormItem className="col-span-12 lg:col-span-3">
-                  <FormControl className="m-0 p-0">
-                    <Input
-                      className="border border-gray-300 rounded-md shadow-sm px-3 py-2 w-full"
-                      disabled={isLoading}
-                      placeholder="Business Type"
-                      {...field}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
             <Button
-              onClick={() => handleNameAvailability()}
+              type="submit"
               className="col-span-12 lg:col-span-2 w-full"
-              disabled={isLoading}
+              disabled={loading}
               size="icon"
+              onClick={() => handleNameAvailability()}
             >
               Check Availability
             </Button>
           </form>
         </Form>
-        {isLoading && (
+        {loading && (
           <div className="p-20">
             <Loader />
           </div>
         )}
-        {/* {photos.length === 0 && !isLoading && (
-          <Empty label="No images generated." />
-        )} */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8">
-          {photos.map((src) => (
-            <Card key={src} className="rounded-lg overflow-hidden">
-              <div className="relative aspect-square">
-                <Image fill alt="Generated" src={src} />
-              </div>
-              <CardFooter className="p-2">
-                <Button
-                  onClick={() => window.open(src)}
-                  variant="secondary"
-                  className="w-full"
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Download
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
       </div>
     </div>
   );

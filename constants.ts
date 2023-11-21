@@ -1,27 +1,41 @@
-import { Code, ImageIcon, MessageSquare, Music, VideoIcon, LinkIcon, FolderEdit } from "lucide-react";
+import { Code, ImageIcon, MessageSquare, Music, VideoIcon, LinkIcon, FolderEdit, Building2, BookOpenCheck, Hash } from "lucide-react";
 
-export const MAX_FREE_COUNTS = 50;
+export const MAX_FREE_COUNTS = 500;
 
 export const tools = [
   {
-    label: 'Company Name Generator',
-    icon: FolderEdit,
+    label: 'Incorporate a Company',
+    icon: Building2,
     href: '/name-generator',
     color: "text-violet-500",
     bgColor: "bg-violet-500/10",
   },
   {
-    label: 'Logo Generation',
-    icon: ImageIcon,
+    label: 'Establish a Trust',
+    icon: BookOpenCheck,
     color: "text-pink-700",
     bgColor: "bg-pink-700/10",
-    href: '/image',
+    href: '#',
   },
   {
-    label: 'Domain Generation',
-    icon: LinkIcon,
+    label: 'Get an ABN',
+    icon: Hash,
     color: "text-emerald-500",
     bgColor: "bg-emerald-500/10",
+    href: '#',
+  },
+  {
+    label: 'Register a Business Name',
+    icon: FolderEdit,
+    color: "text-orange-600",
+    bgColor: "bg-orange-700/10",
+    href: '#',
+  },
+  {
+    label: 'Secure a Domain',
+    icon: LinkIcon,
+    color: "text-sky-500",
+    bgColor: "bg-green-700/10",
     href: '/domain-generator',
   },
 ];
